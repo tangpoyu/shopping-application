@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layout}"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventory</title>
+</head>
+<body>
+    <h1 layout:fragment="header"></h1>
+
+    <div layout:fragment="content" class="container">
+        <div class="alert alert-success" role="alert" th:if="${success_msg}" th:text="${success_msg}">Success Message</div>
+        <div class="alert alert-danger" role="alert" th:if="${error_msg}" th:text="${error_msg}">Error Occurred</div>
+        <div class="d-flex justify-content-center">
+            <div class="col-md-6">
+                <img width="572" height="572" th:src="${'data:image/png;base64,'+inventory.image}" alt="no image is found">
+            </div>
+            <div class="card col-md-6" th:object="${inventory}">
+                <h5 class="card-header" th:text="*{name}">Product name</h5>
+                <div class="card-body">
+                    <h5 class="card-title" th:text="*{description}">description</h5>
+                    <p class="card-text" th:text="*{'$.' + price}">price</p>
+
+                    <a href="#" class="btn btn-primary" sec:authorize="hasAuthority('admin')">Modify</a>
+
+                    <form th:action="@{/addToCart/{id}(id=*{id})}" method="post" sec:authorize="hasAuthority('user')">
+                        <div class="form-group">
+                            <div class="col-xs-10">
+                                <input type="number" class="col-sm-6 form-control" name="quantity">
+                                <button type="submit" class="btn btn-primary mt-3" >Add to cart</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+<!--        <table class="table table-bordered table-striped" th:object="${inventory}">-->
+<!--            <thead>-->
+<!--            <tr>-->
+<!--                <td>Image</td>-->
+<!--                <td>ID</td>-->
+<!--                <td>Description</td>-->
+<!--                <td>Price</td>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <tr>-->
+<!--                <td><img width="572" height="572" th:src="*{'data:image/png;base64,'+image}" alt="no image is found"></td>-->
+<!--                <td><span  th:text="*{id}"> ID </span></td>-->
+<!--                <td><span th:text="*{description}">Description</span></td>-->
+<!--                <td><span th:text="*{price}">Price</span></td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </table>-->
+    </div>
+</body>
+</html>

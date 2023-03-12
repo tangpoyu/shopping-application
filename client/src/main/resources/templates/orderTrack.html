@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layout}"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Order</title>
+</head>
+<body>
+    <h1 layout:fragment="header">Your orders</h1>
+    <div layout:fragment="content" class="container">
+        <div class="alert alert-danger" role="alert" th:if="${error_msg}" th:text="${error_msg}">ERROR MESSAGE</div>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <td>Order id</td>
+                    <td>Status</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${orders.empty}">
+                    <td colspan="4">No orders</td>
+                </tr>
+                <tr th:each="order: ${orders}">
+                    <td><a th:href="@{/order/{id}(id=${order.orderId})}"><span th:text="${order.orderId}">ID</span></a></td>
+                    <td><span th:text="${order.orderStatus}">STATUS</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layout}"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Inventories</title>
+</head>
+<body>
+<h1 layout:fragment="header">Inventories: View all</h1>
+<div layout:fragment="content" class="container">
+    <div class="alert alert-danger" role="alert" th:if="${error_msg}" th:text="${error_msg}">Error Occurred</div>
+    <a th:href="@{/add/product}" class="btn btn-primary float-right mb-3" sec:authorize="hasAuthority('admin')">Create product</a><br>
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <td>ID</td>
+            <td>Quantity</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${inventories.empty}">
+            <td colspan="4">No inventories</td>
+        </tr>
+        <tr th:each="inventory : ${inventories}">
+            <td><a th:href="@{/inventory/{id}(id=${inventory.productId})}"><span  th:text="${inventory.productId}"> ID </span></a></td>
+            <td><span th:text="${inventory.quantity}"> Quantity </span></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

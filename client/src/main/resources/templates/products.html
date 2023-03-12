@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layout}"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Products</title>
+</head>
+<body>
+    <h1 layout:fragment="header">Products: View all</h1>
+    <div layout:fragment="content" class="container">
+        <div class="alert alert-danger" role="alert" th:if="${error_msg}" th:text="${error_msg}">Error Occurred</div>
+        <a th:href="@{/add/product}" class="btn btn-primary float-right my-4" sec:authorize="hasAuthority('admin')">Create product</a><br>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12" th:if="${products.empty}">
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-body">
+                            <p class="card-text">No products</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" th:each="product : ${products}">
+                    <div class="card mb-4 shadow-sm">
+                        <img class="card-img-top"  th:src="${'data:image/png;base64,' + product.image}" data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" alt="Thumbnail [100%x225]" style="height: 225px; width: 100%; display: block;" data-holder-rendered="true">
+                        <div class="card-body">
+                            <p class="card-text" th:text="${product.name}">Product Name</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a th:href="@{/inventory/{id}(id=${product.id})}" class="btn btn-sm btn-outline-secondary">View</a>
+                                </div>
+                                <small class="text-muted" th:text="${'$.' + product.price}">Price</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!--        <table class="table table-bordered table-striped">-->
+<!--            <thead>-->
+<!--                <tr>-->
+<!--                    <td>ID</td>-->
+<!--                    <td>Name</td>-->
+<!--                    <td>Description</td>-->
+<!--                    <td>Price</td>-->
+<!--                    <td></td>-->
+<!--                </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--                <tr th:if="${products.empty}">-->
+<!--                    <td colspan="4">No products</td>-->
+<!--                </tr>-->
+<!--                <tr th:each="product : ${products}">-->
+<!--                    <td><span th:text="${product.id}"> ID </span></td>-->
+<!--                    <td><span th:text="${product.name}"> Name </span></td>-->
+<!--                    <td><span th:text="${product.description}"> Description </span></td>-->
+<!--                    <td><span th:text="${product.price}"> Price </span></td>-->
+<!--                    <td><a th:href="@{/buy/{id}(id=${product.id})}" class="btn btn-primary float-right" sec:authorize="hasAuthority('user')">Buy</a></td>-->
+<!--                </tr>-->
+<!--            </tbody>-->
+<!--        </table>-->
+    </div>
+
+</body>
+</html>

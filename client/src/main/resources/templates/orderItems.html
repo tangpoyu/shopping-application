@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layout}"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<head>
+    <meta charset="UTF-8">
+    <title>Order Items</title>
+</head>
+<body>
+<h1 layout:fragment="header">All</h1>
+<div layout:fragment="content" class="container my-5">
+    <div class="alert alert-danger" role="alert" th:if="${error_msg}" th:text="${error_msg}">Error Occurred</div>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <td>Product Id</td>
+            <td>Name</td>
+            <td>Price</td>
+            <td>Quantity</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${orderItems.empty}">
+            <td colspan="4">No order item is found.</td>
+        </tr>
+        <tr th:each="orderItem : ${orderItems}">
+            <td><span  th:text="${orderItem.productId}"> ID </span></td>
+            <td><span th:text="${orderItem.name}"> NAME </span></td>
+            <td><span  th:text="${orderItem.price}"> PRICE </span></td>
+            <td><span th:text="${orderItem.quantity}"> QUANTITY </span></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

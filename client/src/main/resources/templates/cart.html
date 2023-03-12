@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layout}"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Cart</title>
+    <script src="/js/placeorder.js"></script>
+</head>
+<body>
+    <h1 layout:fragment="header">Cart: View all</h1>
+    <div layout:fragment="content" class="container">
+
+        <div class="alert alert-success" role="alert" th:if="${success_msg}" th:text="${success_msg}">Success Message</div>
+        <div class="alert alert-danger" role="alert" th:if="${error_msg}" th:text="${error_msg}">Error Occurred</div>
+    <!--    <a th:href="@{/placeOrder}" class="btn btn-primary float-right my-4" sec:authorize="hasAuthority('user')">Place order</a><br>-->
+    <!--    <a th:href="@{/add/product}" class="btn btn-primary float-right mb-3" sec:authorize="hasAuthority('admin')">Create product</a><br>-->
+
+        <form id="myForm" th:object="${cart}" th:action="@{/placeOrder}" method="post">
+            <input id="selectedRows" type="hidden" th:field="*{selectedRows}">
+            <fieldset>
+                <button id="submitButton" type="button" value="Place Order" th:if="*{!orderItems.empty}"
+                        class="btn btn-primary mb-3 float-right" sec:authorize="hasAuthority('user')">PLACE ORDER</button>
+                <table class="table table-bordered table-striped" >
+                    <thead>
+                        <tr>
+                            <th class="col-md-1"></th>
+                            <th class="col-md-6">Image</th>
+                            <th class="col-md-2">name</th>
+                            <th class="col-md-2">price</th>
+                            <th class="col-md-2">quantity</th>
+                            <th class="col-md-1"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="cart-body">
+    <!--                    <tr th:if="${cart.empty}">-->
+                        <tr th:if="*{orderItems.empty}">
+                            <td colspan="10">no product add to cart</td>
+                        </tr>
+                        <tr class="bg-dark" th:each="orderItem, itemSet : *{orderItems}">
+                            <td>
+                                <input class="form-check-input ml-auto mt-auto" type="checkbox" value="" id="flexCheckDefault">
+                            </td>
+                            <td class="col-md-6">
+                                <img width="250" class="my-2" height="250" th:src="*{'data:image/png;base64,'+orderItems[__${itemSet.index}__].image}" alt="no image is found">
+                                <input type="hidden"  th:field="*{orderItems[__${itemSet.index}__].image}">
+                                <input type="hidden" th:field="*{orderItems[__${itemSet.index}__].productId}">
+                                <input type="hidden" th:field="*{orderItems[__${itemSet.index}__].name}">
+                                <input type="hidden" th:field="*{orderItems[__${itemSet.index}__].price}">
+
+                            </td>
+                            <td class="col-md-2">
+                                <span class="text-white" th:text="*{orderItems[__${itemSet.index}__].name}">NAME</span>
+                            </td>
+                            <td class="col-md-1">
+                                <span class="text-white" th:text="*{orderItems[__${itemSet.index}__].price}">PRICE</span>
+                            </td>
+                            <td class="col-md-1">
+                                <input type="number" id="quantity" class="form-control" th:field="*{orderItems[__${itemSet.index}__].quantity}">
+                            </td>
+                            <td>
+                                <a th:href="@{/cart/delete/{id}(id=*{orderItems[__${itemSet.index}__].productId})}"
+                                   class="ml-auto mt-auto">
+                                    <span th:text="delete">DELETE</span>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+
+            <div class="form-group">
+                <ul th:if="${#fields.hasErrors('*')}">
+                    <li th:each="err: ${#fields.errors('*')}" th:text="${err}">INPUT IS INCORRECT</li>
+                </ul>
+            </div>
+    <!--        <div class="form-row bg-dark " th:each="product : ${cart}">-->
+    <!--            <div class="col-md-8">-->
+    <!--                <img width="250" class="my-2" height="250" th:src="${'data:image/png;base64,'+product.image}" alt="no image is found">-->
+    <!--                <input type="hidden" th:value="${product.image}" th:field="${product.image}">-->
+    <!--            </div>-->
+    <!--            <div class="col-md-2">-->
+    <!--                <input type="text" readonly class="form-control-plaintext text-white"  th:value="${product.name}" th:field="${product.name}">-->
+    <!--            </div>-->
+    <!--            <div class="col-md-1">-->
+    <!--                <input type="text" readonly class="form-control-plaintext text-white" th:value="${product.price}" th:field="${product.price}">-->
+    <!--            </div>-->
+    <!--            <div class="col-md-1">-->
+    <!--                <input type="text" class="form-control" th:value="${product.quantity}" th:field="${product.quantity}">-->
+    <!--            </div>-->
+    <!--        </div>-->
+
+    <!--        <tr th:each="product : ${cart}">-->
+    <!--            <td> <img width="250" height="250" th:src="${'data:image/png;base64,'+product.image}" alt="no image is found"></td>-->
+    <!--            <input type="hidden" th:field="${product.image}">-->
+    <!--            <td><input type="text" readonly class="form-control-plaintext" th:field="${product.name}"></td>-->
+    <!--            <td> <input type="text" readonly class="form-control-plaintext" th:field="${product.price}"></td>-->
+    <!--            <td><input type="text" class="form-control" th:field="${product.quantity}"></td>-->
+    <!--        </tr>-->
+    <!--        <button type="submit" class="btn btn-primary mt-3  float-right" sec:authorize="hasAuthority('user')">Place Order</button>-->
+        </form>
+
+
+    </div>
+</body>
+</html>

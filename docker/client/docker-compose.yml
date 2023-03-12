@@ -1,0 +1,40 @@
+version: '2.2'
+
+services:
+
+  browser-client:
+    container_name: browser-client
+    image: b10623041/client
+    ports:
+      - "8077:8077"
+
+  api-gateway:
+    container_name: api-gateway
+    image: b10623041/api-gateway
+    ports:
+      - "8079:8079"
+
+  otel-collector:
+    container_name: otel-collector
+    image: otel/opentelemetry-collector-contrib
+    ports:
+      - "4317:4317"
+    command: [ "--config=/etc/config.yaml" ]
+    volumes:
+      - ./otel/collector/config.yaml:/etc/config.yaml
+    depends_on:
+      - browser-client
+
+  nginx:
+    container_name: nginx
+    image: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/logs:/etc/nginx/logs
+      - ./nginx/image:/image
+    depends_on:
+      - browser-client
+

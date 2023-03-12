@@ -1,0 +1,65 @@
+server:
+  port: ${MY_SERVER_PORT}
+
+logging:
+  pattern:
+    level: "trace_id=%mdc{trace_id} span_id=%mdc{span_id} trace_flags=%mdc{trace_flags} %p"
+#  level:
+#    org:
+#      springframework: DEBUG
+#      apache: DEBUG
+
+
+spring:
+  application:
+    name: inventory-service
+  profiles:
+    active: dev
+  config:
+    import: classpath:/static/application-common.properties
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${AUTH_SERVER_URL}/realms/shopping-application
+          jwk-set-uri: ${AUTH_SERVER_URL}/realms/shopping-application/protocol/openid-connect/certs
+#  cloud:
+#    stream:
+#      kafka:
+#        binder:
+#          brokers: localhost:9093
+#      bindings:
+#        addproduct-out-0:
+#          destination: add-product
+#          producer:
+#            partitionCount: 3
+#            requiredGroups:
+#              - add_product_group
+
+  datasource:
+    url: jdbc:postgresql://${DATABASE_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: ${DDL_AUTO}
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    ip-address: 52.199.12.29
+  client:
+    healthcheck:
+      enabled: true
+    refresh:
+      enable: true
+    registerWithEureka: true
+    fetchRegistry: true
+    service-url:
+      defaultZone: ${EUREKA_DEFAULT_ZONE}
+

@@ -1,0 +1,4 @@
+2023/03/07 13:36:28 [error] 24#24: *1 open() "/image/images (2).jpg" failed (2: No such file or directory), client: 172.18.0.1, server: shopping-app.tangpoyu.click, request: "GET /images%20(2).jpg HTTP/1.1", host: "localhost"
+2023/03/07 13:36:29 [error] 24#24: *1 open() "/image/favicon.ico" failed (2: No such file or directory), client: 172.18.0.1, server: shopping-app.tangpoyu.click, request: "GET /favicon.ico HTTP/1.1", host: "localhost", referrer: "http://localhost/images%20(2).jpg"
+2023/03/07 13:37:28 [error] 26#26: *2 open() "/image/images (2).jpg" failed (2: No such file or directory), client: 172.18.0.1, server: shopping-app.tangpoyu.click, request: "GET /images%20(2).jpg HTTP/1.1", host: "localhost"
+2023/03/07 13:41:53 [error] 31#31: *1 open() "/image/ii.jpg" failed (2: No such file or directory), client: 172.18.0.1, server: shopping-app.tangpoyu.click, request: "GET /ii.jpg HTTP/1.1", host: "localhost"

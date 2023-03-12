@@ -1,0 +1,10 @@
+./.idea
+*/target
+*/src/main/resources/logback-spring.xml
+*/src/main/resources/myagentconfig.properties
+docker/*/otel/collector/config.yaml
+docker/*/linux-keys.pem
+docker/infrastructure/keycloak/realms/realm-export.json
+docker/*/db/*
+docker/test
+*/src/main/resources/application-dev.properties

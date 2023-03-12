@@ -1,0 +1,80 @@
+spring:
+  application:
+    name: api-gateway
+  config:
+    import: classpath:/static/application-common.properties
+  profiles:
+    active: dev
+
+#  security:
+#    oauth2:
+#      client:
+#          registration:
+#            api-gateway:
+#              clientId: api-gateway
+#              clientSecret: Ph53PZP6uHv7PRLgIln9noPzQ5Z5ASmN
+#              authorizationGrantType: authorization_code
+#              redirectUri: http://localhost:8079/login/oauth2/code/api-gateway
+#              scope:
+#                - openid
+#          provider:
+#            api-gateway:
+#              issuerUri: http://localhost:8078/realms/shopping-application
+
+  cloud:
+    gateway:
+      enabled: true
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: inventory
+          uri: lb://INVENTORY-SERVICE
+          predicates:
+            - Path=/api/inventory/**
+#          filters:
+#            -   TokenRelay=
+        - id: order
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/api/order/**
+#          filters:
+#            - TokenRelay=
+        - id: product
+          uri: lb://PRODUCT-SERVICE
+          predicates:
+            - Path=/api/product/**
+#          filters:
+#            - TokenRelay=
+#        - id: discovery-server
+#          uri: http://localhost:9500
+#          predicates:
+#            - Path=/eureka/web
+#          filters:
+#            - SetPath=/
+#        - id: discovery-server-static-resource
+#          uri: http://localhost:9500
+#          predicates:
+#            - Path=/eureka/**
+
+
+logging:
+  level:
+    org.springframework: DEBUG
+    root: DEBUG
+    org.springframework.cloud.gateway.route.RouteDefinitionLocator: DEBUG
+    org.springframework.cloud.gateway: DEBUG
+
+eureka:
+  instance:
+    hostname: api-gateway
+  client:
+    refresh:
+      enable: true
+    registerWithEureka: true
+    fetchRegistry: true
+    service-url:
+      defaultZone: ${EUREKA_DEFAULT_ZONE}
+
+server:
+  port: ${MY_SERVER_PORT}

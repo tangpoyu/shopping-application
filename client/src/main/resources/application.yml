@@ -1,0 +1,58 @@
+logout:
+  url:  ${LOGOUT_URL}
+
+server:
+  port: ${MY_SERVER_PORT}
+
+spring:
+  application:
+    name: browser-client
+  profiles:
+    active: dev
+  config:
+    import: classpath:/static/application-common.properties
+#  output.ansi.enabled: ALWAYS
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+  security:
+    oauth2:
+      client:
+        registration:
+          browser-client:
+            clientId: browser-client
+            clientSecret: ${CLIENT_SECRET}
+            authorizationGrantType: authorization_code
+            redirectUri: ${CLIENT_URL}/login/oauth2/code/browser-client
+            scope:
+              - openid
+        provider:
+          browser-client:
+            issuerUri: ${AUTH_SERVER_URL}/realms/shopping-application
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    register-with-eureka: true
+    fetchRegistry: true
+    service-url:
+      defaultZone: ${EUREKA_DEFAULT_ZONE}
+
+
+
+logging:
+#  level:
+#    org.springframework: DEBUG
+  pattern:
+    level: "trace_id=%mdc{trace_id} span_id=%mdc{span_id} trace_flags=%mdc{trace_flags} %p"
+#    console: "%clr(%d{HH:mm:ss.SSS}){blue} %clr(%5p [${spring.application.name:},%mdc{trace_id},%mdc{span_id},trace_flags=%mdc{trace_flags}){yellow} %clr(:){red} %clr(%m){faint}%n"
+#    file: "{\"timestamp\":\"%d{HH:mm:ss.SSS}\",\"level\":\"%p\",\"traceId\":\"%X{traceId:-}\",\"spanId\":\"%X{spanId:-}\",\"appName\":\"${spring.application.name}\",\"message\":\"%m\"}%n"
+#  file:
+#    path: ${user.home}/shopping-app-${spring.application.name}-${server.port}
+#  level:
+#    io.opentelemetry.exporter.zipkin: DEBUG
+
+
+

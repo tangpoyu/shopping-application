@@ -1,0 +1,94 @@
+server:
+  port: ${MY_SERVER_PORT}
+
+logging:
+  pattern:
+    level: "trace_id=%mdc{trace_id} span_id=%mdc{span_id} trace_flags=%mdc{trace_flags} %p"
+#  level:
+#    org.springframework: DEBUG
+
+spring:
+  application:
+    name: order-service
+  profiles:
+    active: dev
+  config:
+    import: classpath:/static/application-common.properties
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${AUTH_SERVER_URL}/realms/shopping-application
+          jwk-set-uri: ${AUTH_SERVER_URL}/realms/shopping-application/protocol/openid-connect/certs
+  datasource:
+    url: jdbc:postgresql://${DATABASE_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: ${DDL_AUTO}
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    ip-address: 103.4.10.217
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    service-url:
+      defaultZone: ${EUREKA_DEFAULT_ZONE}
+
+management:
+#  health:
+#    circuitbreakers:
+#      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+  endpoint:
+    health:
+      show-details: always
+
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      registerHealthIndicator: true
+      slidingWindowSize: 50
+  instances:
+    id-one:
+      registerHealthIndicator: true
+      eventConsumerBufferSize: 15       # Set how many circuit breaker event show in actuator
+      slidingWindowType: COUNT_BASED
+      slidingWindowSize: 5
+      failureRateThreshold: 60
+      slowCallRateThreshold: 80
+      waitDurationInOpenState: 60s
+      permittedNumberOfCallsInHalfOpenState: 5
+      automaticTransitionFromOpenToHalfOpenEnabled: true
+
+resilience4j.timelimiter:
+      configs:
+        default:
+          timeoutDuration: 5s
+          cancelRunningFuture: true
+      instances:
+        id-one:
+          timeoutDuration: 10s
+          cancelRunningFuture: true
+
+#resilience4j.retry:
+#  instances:
+#    id-one:
+#      maxAttempts: 3
+#      waitDuration: 5s

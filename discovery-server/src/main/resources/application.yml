@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: discovery-server
+
+server:
+  port: 9500
+
+eureka:
+  username: poyu
+  password: 123
+  instance:
+    hostname: localhost
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://localhost:9500/eureka
+
+logging:
+  level:
+    org.springframework: DEBUG
