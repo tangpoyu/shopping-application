@@ -6,7 +6,7 @@ This project is for learing Web developent about Spring boot, Spring security, S
 Implement a application which mocks to supply product to consumer in a microservice architecture.
 
 ## App architecture:
-![My Image](architecture.png)
+![My Image](image/architecture.png)
 
 ### Security
 * use keycloak to enable the authorization code flow to authenticate a user, in the case where user is authenticated failed, the user will be 
@@ -27,6 +27,53 @@ the information about system metric, and then we can configure the agent to expo
 through grpc protocol which listen to 0.0.0.0:4317, and then configure the collector to export the metric to prometheus cloud, as a result we can use the Grafana 
 cloud to visualize the system data for a better understanding about self system which can be useful for the bug fixes and performance improvement.
 
+***Log & trace***
+
+
+    1.GET all/product
+
+![IMAGE](image/trace&log/allProduct.png)
+
+    2.GET inventory/{id}
+
+![IMAGE](image/trace&log/inventoryId.png)
+
+    3.POST add/product
+
+![IMAGE](image/trace&log/addProduct.png)
+
+    4.POST addToCart/{id}
+
+![IMAGE](image/trace&log/addToCart.png)
+
+    5.GET cart
+
+![IMAGE](image/trace&log/cart.png)
+
+    6.GET cart/delete/{id}
+
+![IMAGE](image/trace&log/cartDelete.png)
+
+***Metric***
+
+    1.http_server_request_count
+
+![IMAGE](image/metric/http_server_request_count.png)
+
+    2.process_cpu_usage
+
+![IMAGE](image/metric/process_cpu_usage.png)
+
+    3.spring_data_repository_invocation_count
+
+![IMAGE](image/metric/spring_data_repository_invocation_count.png)
+
+    4.system_cpu_usage
+
+![IMAGE](image/metric/system_cpu_usage.png)
+
+****
+
 ## Operation of App:
 
 ### Admin 
@@ -43,7 +90,6 @@ This system supplys a admin user to manage this app which has admin role. ( user
 
 * Logout : admin can logout by clicking the logout button on the top right.
 
-****
 
 ### User
 
