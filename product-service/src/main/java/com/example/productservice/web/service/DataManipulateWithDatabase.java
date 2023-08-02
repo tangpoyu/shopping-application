@@ -3,7 +3,11 @@ package com.example.productservice.web.service;
 import com.example.productservice.persistence.entity.Product;
 import com.example.productservice.persistence.repository.ProductRepository;
 import com.example.productservice.web.dto.ProductResponse;
+import com.example.productservice.web.util.Converter;
+import com.example.productservice.web.util.GetImage;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,32 +30,12 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class DataManipulateWithDatabase implements DataManipulate{
 
-    @Autowired
     private ProductRepository productRepository;
-
-    private static final String USER_HOME = System.getProperty("user.home");
-    private static final String IMAGE_DIR = "product_image";
-
-    @Override
-    public void createProduct(GenericMessage msg) {
-        String payload = (String) msg.getPayload();
-        try {
-            JSONObject jsonObject = new JSONObject(payload);
-            Integer price = (Integer) jsonObject.get("price");
-            Product product = Product.builder()
-                    .id(UUID.fromString((String) jsonObject.get("productId")))
-                    .name((String) jsonObject.get("productName"))
-                    .description((String) jsonObject.get("description"))
-                    .price(BigDecimal.valueOf(price.doubleValue()))
-                    .build();
-            Product saved_product = productRepository.save(product);
-            log.info("Product {} is saved", product.getId());
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    private GetImage getImage;
+    private Converter converter;
 
     @Override
     @Transactional
@@ -71,23 +55,8 @@ public class DataManipulateWithDatabase implements DataManipulate{
         }
 
         log.info("Save product data {} in product-service successfully",data[0]);
-
         log.info("Save product image {} in product-service",data[0]);
-
-        File dir = new File(USER_HOME, IMAGE_DIR);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-
-        Path path = Paths.get(USER_HOME,IMAGE_DIR,data[0]+"." +image.getContentType().split("/")[1]);
-       // Path path = Paths.get(folder,"product-service","src","main","resources","image", data[0]+"." +image.getContentType().split("/")[1]);
-        try {
-            Files.write(path,image.getBytes());
-            log.info("Save product image {} in product-service successfully",data[0]);
-        } catch (IOException e) {
-            log.info("Save product image {} in product-service is failed",data[0]);
-            throw new RuntimeException(String.format("Save product image {} in product-service is failed",data[0]));
-        }
+        getImage.saveImage(data[0],image);
     }
 
     @Override
@@ -100,7 +69,7 @@ public class DataManipulateWithDatabase implements DataManipulate{
                 }))
                 .collect(Collectors.toList());
 
-        return products.stream().map(product -> getImageBase64String(product)).collect(Collectors.toList());
+        return products.stream().map(product -> getImage.getImageBase64String(product)).collect(Collectors.toList());
     }
 
     @Override
@@ -109,41 +78,13 @@ public class DataManipulateWithDatabase implements DataManipulate{
         Product product = productRepository.findById(UUID.fromString(productId)).orElseThrow(
                 ()->new RuntimeException("No product found with this id: " + productId));
 
-           return productToDto(product);
+           return converter.productToDto(product);
     }
 
     @Override
     public List<ProductResponse> getAllProducts() {
         List products = productRepository.findAll().stream()
-                .map(this::productToDto).collect(Collectors.toList());
+                .map(product -> converter.productToDto(product)).collect(Collectors.toList());
         return products;
-    }
-
-    public ProductResponse productToDto(Product product){
-        String bytes = getImageBase64String(product);
-
-        return ProductResponse.builder()
-                .id(product.getId())
-                .name(product.getName())
-                .description(product.getDescription())
-                .price(product.getPrice())
-                .image(bytes)
-                .build();
-    }
-
-    public String getImageBase64String(Product product){
-        byte[] bytes = null;
-
-        try {
-            log.info("Get product image {} from resource folder.", product.getId());
-            Path path= Paths.get(USER_HOME,IMAGE_DIR, product.getId().toString()+product.getImageExtension());
-//            ClassPathResource image = new ClassPathResource(Paths.get("image", product.getId().toString()).toString()+".jpeg");
-            bytes = Files.readAllBytes(path);
-        } catch (IOException e) {
-            log.info("Get product image {} from resource folder if failed", product.getId());
-            throw new RuntimeException(e);
-        }
-        log.info("Get product image {} from resource folder successfully.", product.getId());
-        return Base64.getEncoder().encodeToString(bytes);
     }
 }

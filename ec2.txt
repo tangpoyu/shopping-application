@@ -1,3 +1,11 @@
+AWS AMI : amzn2-ami-kernel-5.10-hvm-2.0.20230221.0-x86_64-gp2
+ssh -i ./linux-keys.pem ec2-user@ec2-52-192-192-216.ap-northeast-1.compute.amazonaws.com # connect to remote server
+scp -i ./linux-keys.pem ./docker-compose.yml ec2-user@ec2-52-192-192-216.ap-northeast-1.compute.amazonaws.com:app/  # transfer file
+docker-compose up -d
+docker logs <<containerID>>
+psql -U postgres -d inventory-service # used for connecting to database
+\dt # show all tables in database
+
 ===================== instance user data ========================================
 #!/bin/bash
 yum update -y
@@ -13,19 +21,19 @@ chmod 666 /var/run/docker.sock
 curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 
-===================== Instance ip address =========================================
+===================== Instance ip address ========================================
 
 # infrastructure
-ec2-user@ec2-43-207-195-181.ap-northeast-1.compute.amazonaws.com
+ec2-user@ec2-35-78-191-32.ap-northeast-1.compute.amazonaws.com
 
 # client
-ec2-user@ec2-54-249-215-190.ap-northeast-1.compute.amazonaws.com
+ec2-user@ec2-52-192-192-216.ap-northeast-1.compute.amazonaws.com
 
 # inventory
-ec2-user@ec2-52-199-12-29.ap-northeast-1.compute.amazonaws.com
+ec2-user@ec2-35-78-126-58.ap-northeast-1.compute.amazonaws.com
 
 # product
-ec2-user@ec2-18-183-39-177.ap-northeast-1.compute.amazonaws.com
+ec2-user@ec2-52-195-219-117.ap-northeast-1.compute.amazonaws.com
 
 # order
-ec2-user@ec2-103-4-10-217.ap-northeast-1.compute.amazonaws.com
+ec2-user@ec2-54-238-228-132.ap-northeast-1.compute.amazonaws.com

@@ -52,7 +52,7 @@ spring:
 eureka:
   instance:
     prefer-ip-address: true
-    ip-address: 52.199.12.29
+    ip-address: 35.78.126.58
   client:
     healthcheck:
       enabled: true

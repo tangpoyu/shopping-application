@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface DataManipulate {
-    void createProduct(GenericMessage msg);
-
     List<ProductResponse> getAllProducts();
 
     ProductResponse getProduct(String productId);

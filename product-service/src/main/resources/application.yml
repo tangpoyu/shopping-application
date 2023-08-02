@@ -46,7 +46,7 @@ eureka:
   instance:
 #    hostname: ${HOSTNAME}
     prefer-ip-address: true
-    ip-address: 18.183.39.177
+    ip-address: 52.195.219.117
 #    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
   client:
     registerWithEureka: true
